@@ -3,5 +3,5 @@
 * YouTube YouTubeTag;
 * Morphe CLI CLITag;
 * Morphe Patches PatchesTag;
-* ReVanced MicroG MicroGTag;
+* Morphe MicroG MicroGTag;
 * Azul Zulu ZuluTag.
