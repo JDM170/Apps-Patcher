@@ -4,8 +4,8 @@ $patches_list = & $JavaPath `
 -jar "Morphe\morphe-cli.jar" list-patches `
 --with-packages `
 --with-versions `
--f "com.google.android.youtube" `
-"Morphe\morphe-patches.mpp"
+--patches "Morphe\morphe-patches.mpp" `
+-f "com.google.android.youtube"
 $LatestSupported = [regex]::Matches($patches_list, "\d{2}\.\d{2}\.\d{2}") | ForEach-Object { $_.Value } | Sort-Object -Descending -Unique | Select-Object -First 1
 $LatestSupportedYT = $LatestSupported.Replace('.', '-')
 
@@ -36,11 +36,11 @@ Write-Verbose -Message "Selenium web driver" -Verbose
 try
 {
     $Parameters = @{
-      Uri             = "https://www.nuget.org/api/v2/package/Selenium.WebDriver"
-      OutFile         = "Morphe\selenium.webdriver.nupkg"
-      UseBasicParsing = $true
-      Verbose         = $true
-      ErrorAction     = "Stop"
+        Uri             = "https://www.nuget.org/api/v2/package/Selenium.WebDriver"
+        OutFile         = "Morphe\selenium.webdriver.nupkg"
+        UseBasicParsing = $true
+        Verbose         = $true
+        ErrorAction     = "Stop"
     }
     Invoke-RestMethod @Parameters
 }
@@ -86,7 +86,7 @@ $Options.AddArgument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) App
 $driver = New-Object -TypeName OpenQA.Selenium.Edge.EdgeDriver("Morphe\msedgedriver.exe", $Options)
 
 # https://www.apkmirror.com/apk/google-inc/youtube/
-$APKMirrorURL = "https://www.apkmirror.com/apk/google-inc/youtube/youtube-$($LatestSupportedYT)-release/youtube-$($LatestSupportedYT)-2-android-apk-download/"
+$APKMirrorURL = "https://www.apkmirror.com/apk/google-inc/youtube/youtube-$($LatestSupportedYT)-release/youtube-$($LatestSupportedYT)-4-android-apk-download/"
 
 Write-Verbose -Message "Trying URL $APKMirrorURL" -Verbose
 
@@ -96,7 +96,7 @@ $ButtonTitle = $driver.FindElement([OpenQA.Selenium.By]::CssSelector("a.download
 # Get button title. We need a NON-bundle version only
 $ButtonTitle.Text.Trim()
 
-if ($ButtonTitle.Text.Trim() -match "DOWNLOAD APK BUNDLE")
+if ($ButtonTitle.Text.Trim() -match "DOWNLOAD APK BUNDLE" || $ButtonTitle.Text.Trim() -match "Download APK Bundle")
 {
     Write-Verbose -Message "$ButtonTitle.Text.Trim() matches 'BUNDLE'" -Verbose
     $driver.Quit()
@@ -104,7 +104,6 @@ if ($ButtonTitle.Text.Trim() -match "DOWNLOAD APK BUNDLE")
 }
 
 $DownloadURL = $ButtonTitle.GetAttribute("href")
-$DownloadURL
 # Download youtube.apk
 # Waiting for Edge to finish downloading
 $driver.Navigate().GoToUrl($DownloadURL)
@@ -124,7 +123,7 @@ do
 }
 while (-not $APK)
 
-# Copy APK to ReVanced_Builder folder
+# Copy APK to Morphe folder
 $Parameters = @{
     Path        = "$DownloadsFolder\*.apk"
     Destination = "Morphe"
