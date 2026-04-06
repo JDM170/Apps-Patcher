@@ -33,8 +33,8 @@ if (-not (Test-Path -Path "$CurrentFolder\Morphe"))
     New-Item -Path "$CurrentFolder\Morphe" -ItemType Directory -Force
 }
 
-Write-Verbose -Message "" -Verbose
-Write-Verbose -Message "Downloading Morphe CLI" -Verbose
+Write-Host "" -ForegroundColor Green
+Write-Host "Downloading Morphe CLI" -ForegroundColor Green
 # https://github.com/MorpheApp/morphe-cli
 $Parameters = @{
     Uri             = "https://api.github.com/repos/MorpheApp/morphe-cli/releases/latest"
@@ -50,8 +50,8 @@ $Parameters = @{
 }
 Invoke-RestMethod @Parameters
 
-Write-Verbose -Message "" -Verbose
-Write-Verbose -Message "Downloading Morphe patches" -Verbose
+Write-Host "" -ForegroundColor Green
+Write-Host "Downloading Morphe patches" -ForegroundColor Green
 # https://github.com/MorpheApp/morphe-patches
 $Parameters = @{
     Uri             = "https://api.github.com/repos/MorpheApp/morphe-patches/releases/latest"
@@ -67,8 +67,8 @@ $Parameters = @{
 }
 Invoke-RestMethod @Parameters
 
-Write-Verbose -Message "" -Verbose
-Write-Verbose -Message "Downloading Morphe MicroG" -Verbose
+Write-Host "" -ForegroundColor Green
+Write-Host "Downloading Morphe MicroG" -ForegroundColor Green
 # https://github.com/MorpheApp/MicroG-RE
 $Parameters = @{
     Uri             = "https://api.github.com/repos/MorpheApp/MicroG-RE/releases/latest"
@@ -90,8 +90,8 @@ if (Test-Path -Path "$CurrentFolder\Morphe\jdk")
     Remove-Item -Path "$CurrentFolder\Morphe\jdk" -Recurse -Force
 }
 
-Write-Verbose -Message "" -Verbose
-Write-Verbose -Message "Downloading Azul Zulu" -Verbose
+Write-Host "" -ForegroundColor Green
+Write-Host "Downloading Azul Zulu" -ForegroundColor Green
 # https://github.com/ScoopInstaller/Java/blob/master/bucket/zulu-jdk.json
 $Parameters = @{
     Uri             = "https://raw.githubusercontent.com/ScoopInstaller/Java/master/bucket/zulu-jdk.json"
@@ -119,16 +119,18 @@ Expand-Archive @Parameters
 Remove-Item -Path "$CurrentFolder\Morphe\jdk_windows-x64_bin.zip" -Force
 
 # Find latest supported YouTube APK version
-Write-Verbose -Message "" -Verbose
-Write-Verbose -Message "Getting latest supported YouTube APK version" -Verbose
+Write-Host "" -ForegroundColor Green
+Write-Host "Getting latest supported YouTube APK version" -ForegroundColor Green
 $patches_list = & "$CurrentFolder\Morphe\jdk\zulu*win_x64\bin\java.exe" `
 -jar "$CurrentFolder\Morphe\morphe-cli.jar" list-patches `
+--patches "$CurrentFolder\Morphe\morphe-patches.mpp" `
 --with-packages `
 --with-versions `
--f "com.google.android.youtube" `
-"$CurrentFolder\Morphe\morphe-patches.mpp"
+-f "com.google.android.youtube"
 $LatestSupported = [regex]::Matches($patches_list, "\d{2}\.\d{2}\.\d{2}") | ForEach-Object { $_.Value } | Sort-Object -Descending -Unique | Select-Object -First 1
-Write-Host "Download: https://www.apkmirror.com/apk/google-inc/youtube/youtube-$($LatestSupported.replace('.', '-'))-release/" -ForegroundColor Green
+
+Write-Host "" -ForegroundColor Green
+Write-Host "Download 'nodpi' version from: https://www.apkmirror.com/apk/google-inc/youtube/youtube-$($LatestSupported.replace('.', '-'))-release/" -ForegroundColor Green
 Write-Host "Place the file in the 'Morphe' folder with the name 'youtube.apk'." -ForegroundColor Green
 Write-Host "Press Enter to continue." -ForegroundColor Green
 Read-Host
@@ -151,7 +153,7 @@ Read-Host
 # Invoke-Item -Path "$CurrentFolder\Morphe"
 
 $Files = @(
-    "$CurrentFolder\Morphe\Temp",
+    # "$CurrentFolder\Morphe\Temp",
     "$CurrentFolder\Morphe\jdk",
     "$CurrentFolder\Morphe\morphe-cli.jar",
     "$CurrentFolder\Morphe\morphe-patches.mpp",
