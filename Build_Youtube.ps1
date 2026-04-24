@@ -127,7 +127,7 @@ $patches_list = & "$CurrentFolder\Morphe\jdk\zulu*win_x64\bin\java.exe" `
 --with-packages `
 --with-versions `
 -f "com.google.android.youtube"
-$LatestSupported = [regex]::Matches($patches_list, "\d{2}\.\d{2}\.\d{2}") | ForEach-Object { $_.Value } | Sort-Object -Descending -Unique | Select-Object -First 1
+$LatestSupported = [regex]::Matches($patches_list, "\d{2}\.\d{2}\.\d{2,3}") | ForEach-Object { $_.Value } | Sort-Object -Descending -Unique | Select-Object -First 1
 
 Write-Host "" -ForegroundColor Green
 Write-Host "Download 'nodpi' version from: https://www.apkmirror.com/apk/google-inc/youtube/youtube-$($LatestSupported.replace('.', '-'))-release/" -ForegroundColor Green
