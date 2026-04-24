@@ -87,6 +87,7 @@ jobs:
         with:
           name: YouTube
           path: Youtube.zip
+          retention-days: 1
 
   reddit:
     runs-on: windows-latest
@@ -157,6 +158,7 @@ jobs:
         with:
           name: Reddit
           path: Morphe/reddit.apk
+          retention-days: 1
 
   release:
     needs: [youtube, reddit]
