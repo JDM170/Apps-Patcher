@@ -15,4 +15,4 @@ $Parameters = @{
 }
 Invoke-RestMethod @Parameters
 
-echo "MicroGTag=$TAG" >> $env:GITHUB_ENV
+echo "MicroGTag=$TAG" >> $env:GITHUB_OUTPUT

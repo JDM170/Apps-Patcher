@@ -15,4 +15,4 @@ $Parameters = @{
 }
 Invoke-RestMethod @Parameters
 
-echo "CLIvtag=$TAG" >> $env:GITHUB_ENV
+echo "CLIvtag=$TAG" >> $env:GITHUB_OUTPUT

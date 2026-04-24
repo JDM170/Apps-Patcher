@@ -6,31 +6,42 @@ on:
   workflow_dispatch:
 
 jobs:
-  patch:
+  youtube:
     runs-on: windows-latest
     timeout-minutes: 10
+    outputs:
+      zulu: ${{ steps.zulu.outputs.ZuluTag }}
+      cli: ${{ steps.morphe_cli.outputs.CLIvtag }}
+      patches: ${{ steps.morphe_patches.outputs.Patchesvtag }}
+      youtube_microg: ${{ steps.morphe_microg.outputs.MicroGTag }}
+      youtube_app: ${{ steps.youtube_app.outputs.SupportedYoutube }}
     steps:
       - uses: actions/checkout@main
 
       - name: Download and expanding Zulu JDK
+        id: zulu
         run: |
           New-Item -Path Morphe -ItemType Directory -Force
 
           . Scripts\Zulu_JDK.ps1
 
       - name: Download Morphe CLI
+        id: morphe_cli
         run: |
           . Scripts\Morphe_CLI.ps1
 
       - name: Download Morphe Patches
+        id: morphe_patches
         run: |
           . Scripts\Morphe_Patches.ps1
 
       - name: Download Morphe MicroG
+        id: morphe_microg
         run: |
           . Scripts\MicroG.ps1
 
       - name: Download YouTube
+        id: youtube_app
         run: |
           . Scripts\YouTube.ps1
 
@@ -55,26 +66,125 @@ jobs:
           --disable "Shorts autoplay" `
           --disable "Theme" `
           --purge `
-          --out "Morphe\morphe.apk" `
+          --out "Morphe\morphe-youtube.apk" `
           "Morphe\youtube.apk"
 
       - name: Create archive
         run: |
           $Parameters = @{
-              Path             = "Morphe\morphe.apk", "Morphe\microg.apk"
-              DestinationPath  = "Morphe.zip"
+              Path             = "Morphe\morphe-youtube.apk", "Morphe\microg.apk"
+              DestinationPath  = "Youtube.zip"
               CompressionLevel = "Fastest"
               Force            = $true
           }
           Compress-Archive @Parameters
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: YouTube
+          path: Youtube.zip
+
+  reddit:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    outputs:
+      reddit_app: ${{ steps.reddit_app.outputs.SupportedReddit }}
+      apkeditor: ${{ steps.apkeditor.outputs.ApkEditorTag }}
+    steps:
+      - uses: actions/checkout@main
+
+      - name: Download and expanding Zulu JDK
+        id: zulu
+        run: |
+          New-Item -Path Morphe -ItemType Directory -Force
+
+          . Scripts\Zulu_JDK.ps1
+
+      - name: Download Morphe CLI
+        id: morphe_cli
+        run: |
+          . Scripts\Morphe_CLI.ps1
+
+      - name: Download Morphe Patches
+        id: morphe_patches
+        run: |
+          . Scripts\Morphe_Patches.ps1
+
+      - name: Download APKEditor
+        id: apkeditor
+        run: |
+          . Scripts\APKEditor.ps1
+
+      - name: Download Reddit
+        id: reddit_app
+        run: |
+          . Scripts\Reddit.ps1
+
+      - name: Add keystore from secrets
+        env:
+          KEYSTORE: ${{ secrets.MORPHE_KEYSTORE }}
+        if: ${{ env.KEYSTORE != '' }}
+        run: |
+          [byte[]]$bytes = [convert]::FromBase64String('${{ env.KEYSTORE }}')
+          [System.IO.File]::WriteAllBytes("Morphe\morphe.keystore", $bytes)
+
+      - name: Merge APKM to APK
+        run: |
+          $JavaPath = (Resolve-Path -Path "Morphe\jdk_windows-x64_bin\zulu*win_x64\bin\java.exe").Path
+
+          & $JavaPath `
+          -jar "Morphe\apkeditor.jar" m `
+          -i "Morphe\reddit.apkm" `
+          -o "Morphe\merged.apk"
+
+      - name: Create patched APK
+        run: |
+          $JavaPath = (Resolve-Path -Path "Morphe\jdk_windows-x64_bin\zulu*win_x64\bin\java.exe").Path
+
+          & $JavaPath `
+          -jar "Morphe\morphe-cli.jar" patch `
+          --patches "Morphe\morphe-patches.mpp" `
+          --purge `
+          --out "Morphe\reddit.apk" `
+          "Morphe\merged.apk"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Reddit
+          path: reddit.apk
+
+  release:
+    needs: [youtube, reddit]
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - name: Download YouTube artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: YouTube
+
+      - name: Download Reddit artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Reddit
+
       - name: Create Release Notes
         id: read_release
         run: |
           # https://en.wikipedia.org/wiki/Percent-encoding
-          (Get-Content -Path ReleaseNotesTemplate.md -Encoding utf8 -Raw).replace("YouTubeTag", "${{ env.LatestSupportedYT }}").replace("CLITag", "${{ env.CLIvtag }}").replace("PatchesTag", "${{ env.Patchesvtag }}").replace("MicroGTag", "${{ env.MicroGTag }}").replace("ZuluTag", "${{ env.ZuluTag }}") | Set-Content -Path ReleaseNotesTemplate.md -Encoding utf8 -Force
+          (Get-Content -Path ReleaseNotesTemplate.md -Encoding utf8 -Raw).replace("MorpheCli", "${{ needs.youtube.outputs.cli }}")
+          .replace("MorphePatches", "${{ needs.youtube.outputs.patches }}")
+          .replace("ZuluVersion", "${{ needs.youtube.outputs.zulu }}")
+          .replace("YouTubeTag", "${{ needs.youtube.outputs.youtube_app }}")
+          .replace("MicroGTag", "${{ needs.youtube.outputs.youtube_microg }}")
+          .replace("RedditTag", "${{ needs.reddit.outputs.reddit_app }}")
+          .replace("APKEditorTag", "${{ needs.reddit.outputs.apkeditor }}") | Set-Content -Path ReleaseNotesTemplate.md -Encoding utf8 -Force
+
           # https://trstringer.com/github-actions-multiline-strings/
           Add-Content -Path $env:GITHUB_OUTPUT -Value "ReleaseBody=ReleaseNotesTemplate.md"
+
           $ReleaseName = Get-Date -f "yyyy.MM.dd"
           echo "RELEASE_NAME=$ReleaseName" >> $env:GITHUB_ENV
 
@@ -83,4 +193,6 @@ jobs:
         with:
           tag_name: ${{ env.RELEASE_NAME }}
           body_path: ${{ steps.read_release.outputs.ReleaseBody }}
-          files: Morphe.zip
+          files: |
+            Youtube.zip
+            reddit.apk

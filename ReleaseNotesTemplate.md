@@ -1,7 +1,19 @@
 ## Automatically generated release notes
 
+* Morphe CLI MorpheCli;
+* Morphe Patches MorphePatches;
+* Azul Zulu ZuluVersion.
+
+---
+
+### YouTube
+
 * YouTube YouTubeTag;
-* Morphe CLI CLITag;
-* Morphe Patches PatchesTag;
-* Morphe MicroG MicroGTag;
-* Azul Zulu ZuluTag.
+* Morphe MicroG MicroGTag.
+
+---
+
+### Reddit
+
+* Reddit RedditTag;
+* APKEditor APKEditorTag.

@@ -15,4 +15,4 @@ $Parameters = @{
 }
 Invoke-RestMethod @Parameters
 
-echo "Patchesvtag=$TAG" >> $env:GITHUB_ENV
+echo "Patchesvtag=$TAG" >> $env:GITHUB_OUTPUT

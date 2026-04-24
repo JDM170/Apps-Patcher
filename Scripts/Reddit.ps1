@@ -5,9 +5,9 @@ $patches_list = & $JavaPath `
 --patches "Morphe\morphe-patches.mpp" `
 --with-packages `
 --with-versions `
---filter-package-name "com.google.android.youtube"
-$LatestSupported = [regex]::Matches($patches_list, "\d{2}\.\d{2}\.\d{2,3}") | ForEach-Object { $_.Value } | Sort-Object -Descending -Unique | Select-Object -First 1
-$LatestSupportedYT = $LatestSupported.Replace('.', '-')
+--filter-package-name "com.reddit.frontpage"
+$LatestSupported = [regex]::Matches($patches_list, "\d{4}\.\d{2}\.\d{1,2}") | ForEach-Object { $_.Value } | Sort-Object -Descending -Unique | Select-Object -First 1
+$LatestSupportedRD = $LatestSupported.Replace('.', '-')
 
 Get-Process -Name msedgedriver, msedge -ErrorAction Ignore | Stop-Process -Force -ErrorAction Ignore
 
@@ -85,8 +85,8 @@ $Options.AddArgument("--window-size=1280,720")
 $Options.AddArgument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0")
 $driver = New-Object -TypeName OpenQA.Selenium.Edge.EdgeDriver("Morphe\msedgedriver.exe", $Options)
 
-# https://www.apkmirror.com/apk/google-inc/youtube/
-$APKMirrorURL = "https://www.apkmirror.com/apk/google-inc/youtube/youtube-$($LatestSupportedYT)-release/youtube-$($LatestSupportedYT)-4-android-apk-download/"
+# https://www.apkmirror.com/apk/redditinc/reddit/
+$APKMirrorURL = "https://www.apkmirror.com/apk/redditinc/reddit/reddit-$($LatestSupportedRD)-release/reddit-$($LatestSupportedRD)-android-apk-download/"
 
 Write-Verbose -Message "Trying URL $APKMirrorURL" -Verbose
 
@@ -104,7 +104,7 @@ if ($ButtonTitle.Text.Trim() -match "DOWNLOAD APK BUNDLE" || $ButtonTitle.Text.T
 }
 
 $DownloadURL = $ButtonTitle.GetAttribute("href")
-# Download youtube.apk
+# Download reddit.apkm
 # Waiting for Edge to finish downloading
 $driver.Navigate().GoToUrl($DownloadURL)
 
@@ -114,7 +114,7 @@ $DownloadsFolder = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows
 # Wait until apk is being downloaded
 do
 {
-    $APK = Test-Path -Path "$DownloadsFolder\*.apk"
+    $APK = Test-Path -Path "$DownloadsFolder\*.apkm"
     if (-not $APK)
     {
         "Waiting for an APK file to be downloaded..."
@@ -125,16 +125,16 @@ while (-not $APK)
 
 # Copy APK to Morphe folder
 $Parameters = @{
-    Path        = "$DownloadsFolder\*.apk"
+    Path        = "$DownloadsFolder\*.apkm"
     Destination = "Morphe"
     Force       = $true
 }
 Copy-Item @Parameters
 
-# Rename file to youtube.apk
-Get-Item -Path "Morphe\com.google.android*.apk" | Rename-Item -NewName youtube.apk -Force
+# Rename file to reddit.apkm
+Get-Item -Path "Morphe\com.reddit.frontpage*.apkm" | Rename-Item -NewName reddit.apkm -Force
 
 $driver.Quit()
 Get-Process -Name msedgedriver, msedge -ErrorAction Ignore | Stop-Process -Force -ErrorAction Ignore
 
-echo "SupportedYoutube=$LatestSupported" >> $env:GITHUB_OUTPUT
+echo "SupportedReddit=$LatestSupported" >> $env:GITHUB_OUTPUT

@@ -15,7 +15,7 @@ $Parameters = @{
 }
 Invoke-RestMethod @Parameters
 
-echo "ZuluTag=$TAG" >> $env:GITHUB_ENV
+echo "ZuluTag=$TAG" >> $env:GITHUB_OUTPUT
 
 Write-Verbose -Message "Expanding Zulu JDK" -Verbose
 
