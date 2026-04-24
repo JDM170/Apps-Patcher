@@ -3,6 +3,9 @@ $Parameters = @{
     Uri             = "https://api.github.com/repos/MorpheApp/morphe-cli/releases/latest"
     UseBasicParsing = $true
     Verbose         = $true
+    Headers         = @{
+        Authorization = "token $env:GITHUB_TOKEN"
+    }
 }
 $apiResult = Invoke-RestMethod @Parameters
 $URL = ($apiResult.assets | Where-Object -FilterScript {$_.content_type -eq "application/java-archive"}).browser_download_url | Select-Object -First 1
@@ -12,6 +15,9 @@ $Parameters = @{
     Outfile         = "Morphe\morphe-cli.jar"
     UseBasicParsing = $true
     Verbose         = $true
+    Headers         = @{
+        Authorization = "token $env:GITHUB_TOKEN"
+    }
 }
 Invoke-RestMethod @Parameters
 

@@ -3,6 +3,9 @@ $Parameters = @{
     Uri             = "https://api.github.com/repos/REAndroid/APKEditor/releases/latest"
     UseBasicParsing = $true
     Verbose         = $true
+    Headers         = @{
+        Authorization = "token $env:GITHUB_TOKEN"
+    }
 }
 $apiResult = Invoke-RestMethod @Parameters
 $URL = ($apiResult.assets | Where-Object -FilterScript {$_.content_type -eq "application/x-java-archive"}).browser_download_url
@@ -12,6 +15,9 @@ $Parameters = @{
     Outfile         = "Morphe\apkeditor.jar"
     UseBasicParsing = $true
     Verbose         = $true
+    Headers         = @{
+        Authorization = "token $env:GITHUB_TOKEN"
+    }
 }
 Invoke-RestMethod @Parameters
 

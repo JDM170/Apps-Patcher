@@ -3,6 +3,9 @@ $Parameters = @{
     Uri             = "https://raw.githubusercontent.com/ScoopInstaller/Java/master/bucket/zulu-jdk.json"
     UseBasicParsing = $true
     Verbose         = $true
+    Headers         = @{
+        Authorization = "token $env:GITHUB_TOKEN"
+    }
 }
 $apiResult = Invoke-RestMethod @Parameters
 $URL = $apiResult.architecture."64bit".url
