@@ -101,7 +101,7 @@ foreach ($link in $links) {
     $driver.Navigate().GoToUrl($link)
     $ButtonTitle = $driver.FindElement([OpenQA.Selenium.By]::CssSelector("a.downloadButton"))
     $ButtonTitle.Text.Trim()
-    if ($ButtonTitle.Text.Trim() -match "DOWNLOAD APK" || $ButtonTitle.Text.Trim() -match "Download APK")
+    if (($ButtonTitle.Text.Trim() -match "(?i)download apk") -and ($ButtonTitle.Text.Trim() -notmatch "(?i)bundle"))
     {
         Write-Verbose -Message "Found 'DOWNLOAD APK' on $link" -Verbose
         $DownloadURL = $ButtonTitle.GetAttribute("href")
