@@ -179,13 +179,14 @@ jobs:
         id: release_notes
         run: |
           # https://en.wikipedia.org/wiki/Percent-encoding
-          (Get-Content -Path ReleaseNotesTemplate.md -Encoding utf8 -Raw).replace("MorpheCli", "${{ needs.youtube.outputs.cli }}")
-          .replace("MorphePatches", "${{ needs.youtube.outputs.patches }}")
-          .replace("ZuluVersion", "${{ needs.youtube.outputs.zulu }}")
-          .replace("YouTubeTag", "${{ needs.youtube.outputs.youtube_app }}")
-          .replace("MicroGTag", "${{ needs.youtube.outputs.youtube_microg }}")
-          .replace("RedditTag", "${{ needs.reddit.outputs.reddit_app }}")
-          .replace("APKEditorTag", "${{ needs.reddit.outputs.apkeditor }}") | Set-Content -Path ReleaseNotesTemplate.md -Encoding utf8 -Force
+          (Get-Content -Path ReleaseNotesTemplate.md -Encoding utf8 -Raw).
+          replace("MorpheCli", "${{ needs.youtube.outputs.cli }}").
+          replace("MorphePatches", "${{ needs.youtube.outputs.patches }}").
+          replace("ZuluVersion", "${{ needs.youtube.outputs.zulu }}").
+          replace("YouTubeTag", "${{ needs.youtube.outputs.youtube_app }}").
+          replace("MicroGTag", "${{ needs.youtube.outputs.youtube_microg }}").
+          replace("RedditTag", "${{ needs.reddit.outputs.reddit_app }}").
+          replace("APKEditorTag", "${{ needs.reddit.outputs.apkeditor }}") | Set-Content -Path ReleaseNotesTemplate.md -Encoding utf8 -Force
 
           # https://trstringer.com/github-actions-multiline-strings/
           Add-Content -Path $env:GITHUB_OUTPUT -Value "ReleaseBody=ReleaseNotesTemplate.md"
