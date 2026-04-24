@@ -92,18 +92,8 @@ Write-Verbose -Message "Trying URL $APKMirrorURL" -Verbose
 
 $driver.Navigate().GoToUrl($APKMirrorURL)
 $ButtonTitle = $driver.FindElement([OpenQA.Selenium.By]::CssSelector("a.downloadButton"))
-
-# Get button title. We need a NON-bundle version only
-$ButtonTitle.Text.Trim()
-
-if ($ButtonTitle.Text.Trim() -match "DOWNLOAD APK BUNDLE" || $ButtonTitle.Text.Trim() -match "Download APK Bundle")
-{
-    Write-Verbose -Message "$ButtonTitle.Text.Trim() matches 'BUNDLE'" -Verbose
-    $driver.Quit()
-    exit
-}
-
 $DownloadURL = $ButtonTitle.GetAttribute("href")
+
 # Download reddit.apkm
 # Waiting for Edge to finish downloading
 $driver.Navigate().GoToUrl($DownloadURL)
