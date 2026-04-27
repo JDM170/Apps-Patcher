@@ -12,7 +12,7 @@ $URL = $apiResult.architecture."64bit".url
 $TAG = $apiResult.version
 $Parameters = @{
     Uri             = $URL
-    Outfile         = "Morphe\jdk_windows-x64_bin.zip"
+    Outfile         = "$env:ZuluJDKDir\jdk_windows-x64_bin.zip"
     UseBasicParsing = $true
     Verbose         = $true
 }
@@ -23,11 +23,11 @@ echo "ZuluTag=$TAG" >> $env:GITHUB_OUTPUT
 Write-Verbose -Message "Expanding Zulu JDK" -Verbose
 
 $Parameters = @{
-    Path            = "Morphe\jdk_windows-x64_bin.zip"
-    DestinationPath = "Morphe\jdk_windows-x64_bin"
+    Path            = "$env:ZuluJDKDir\jdk_windows-x64_bin.zip"
+    DestinationPath = "$env:ZuluJDKDir\jdk_windows-x64_bin"
     Force           = $true
     Verbose         = $true
 }
 Expand-Archive @Parameters
 
-Remove-Item -Path "Morphe\jdk_windows-x64_bin.zip" -Force
+Remove-Item -Path "$env:ZuluJDKDir\jdk_windows-x64_bin.zip" -Force

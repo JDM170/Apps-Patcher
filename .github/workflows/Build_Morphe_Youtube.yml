@@ -14,6 +14,8 @@ jobs:
       - uses: actions/checkout@main
 
       - name: Download and expand Zulu JDK
+        env:
+          ZuluJDKDir: "Morphe"
         run: |
           New-Item -Path Morphe -ItemType Directory -Force
 

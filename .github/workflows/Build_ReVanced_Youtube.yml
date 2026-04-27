@@ -14,6 +14,8 @@ jobs:
       - uses: actions/checkout@main
 
       - name: Download and expand Zulu JDK
+        env:
+          ZuluJDKDir: "ReVanced"
         run: |
           New-Item -Path ReVanced -ItemType Directory -Force
 
