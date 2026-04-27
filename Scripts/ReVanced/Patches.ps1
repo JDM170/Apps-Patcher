@@ -3,9 +3,9 @@ $Parameters = @{
     Uri             = "https://api.revanced.app/v5/patches"
     UseBasicParsing = $true
     Verbose         = $true
-    Headers         = @{
-        Authorization = "token $env:GITHUB_TOKEN"
-    }
+    # Headers         = @{
+        # Authorization = "token $env:GITHUB_TOKEN"
+    # }
 }
 $apiResult = Invoke-RestMethod @Parameters
 $URL = $apiResult.download_url
@@ -15,9 +15,9 @@ $Parameters = @{
     Outfile         = "ReVanced\revanced-patches.rvp"
     UseBasicParsing = $true
     Verbose         = $true
-    Headers         = @{
-        Authorization = "token $env:GITHUB_TOKEN"
-    }
+    # Headers         = @{
+        # Authorization = "token $env:GITHUB_TOKEN"
+    # }
 }
 Invoke-RestMethod @Parameters
 
