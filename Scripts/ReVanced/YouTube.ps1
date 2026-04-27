@@ -101,6 +101,7 @@ foreach ($link in $links) {
     Write-Verbose -Message "Trying URL $link" -Verbose
     $driver.Navigate().GoToUrl($link)
     # $ButtonTitle = $driver.FindElement([OpenQA.Selenium.By]::CssSelector("a.downloadButton"))
+    # $ButtonTitle.Text.Trim()
 
     $buttons = $driver.FindElements([OpenQA.Selenium.By]::CssSelector("a.downloadButton"))
     if ($buttons.Count -eq 0) {
@@ -108,8 +109,8 @@ foreach ($link in $links) {
         continue
     }
     $button = $buttons[0]
+    $ButtonTitle = $button.Text.Trim()
 
-    $ButtonTitle.Text.Trim()
     if (($ButtonTitle.Text.Trim() -match "(?i)download apk") -and ($ButtonTitle.Text.Trim() -notmatch "(?i)bundle"))
     {
         Write-Verbose -Message "Found 'DOWNLOAD APK' on $link" -Verbose
