@@ -108,10 +108,10 @@ foreach ($link in $links) {
         Write-Verbose -Message "No download button found on $APKMirrorURL, skipping" -Verbose
         continue
     }
-    $button = $buttons[0]
-    $ButtonTitle = $button.Text.Trim()
+    $ButtonTitle = $buttons[0]
+    $buttonText = $button.Text.Trim()
 
-    if (($ButtonTitle.Text.Trim() -match "(?i)download apk") -and ($ButtonTitle.Text.Trim() -notmatch "(?i)bundle"))
+    if (($buttonText -match "(?i)download apk") -and ($buttonText -notmatch "(?i)bundle")) {
     {
         Write-Verbose -Message "Found 'DOWNLOAD APK' on $link" -Verbose
         $DownloadURL = $ButtonTitle.GetAttribute("href")
