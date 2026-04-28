@@ -6,7 +6,7 @@ Build packages (.apk) easily than ever using latest ReVanced & Morphe patches an
 ## Usage
 
 ### Locally
-* To build YouTube or Reddit locally you need just to run [`Youtube_ReVanced.ps1`](https://github.com/JDM170/Morphe_Builder/blob/main/Youtube_ReVanced.ps1) OR [`Youtube_Morphe.ps1`](https://github.com/JDM170/Morphe_Builder/blob/main/Youtube_Morphe.ps1) OR [`Reddit.ps1`](https://github.com/JDM170/Morphe_Builder/blob/main/Local_Scripts/Reddit.ps1) via PowerShell;
+* To build YouTube or Reddit locally you need just to run [`Youtube_ReVanced.ps1`](https://github.com/JDM170/Morphe_Builder/blob/main/Local_Scripts/Youtube_ReVanced.ps1) OR [`Youtube_Morphe.ps1`](https://github.com/JDM170/Morphe_Builder/blob/main/Local_Scripts/Youtube_Morphe.ps1) OR [`Reddit.ps1`](https://github.com/JDM170/Morphe_Builder/blob/main/Local_Scripts/Reddit.ps1) via PowerShell;
 * All patches except the followings applied to Youtube:
   * Custom branding
   * Change header
