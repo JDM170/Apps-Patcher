@@ -279,7 +279,7 @@ jobs:
           # https://trstringer.com/github-actions-multiline-strings/
           Add-Content -Path $env:GITHUB_OUTPUT -Value "ReleaseBody=ReleaseNotesTemplate.md"
 
-          $ReleaseName = (Get-Date -f "yyyy.MM.dd") + "-1"
+          $ReleaseName = Get-Date -f "yyyy.MM.dd"
           echo "RELEASE_NAME=$ReleaseName" >> $env:GITHUB_ENV
 
       - name: Upload to Releases
