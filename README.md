@@ -31,15 +31,16 @@ Every 1st of the month, releases are created automatically according to the sche
 
 Release notes are generated dynamically using the [ReleaseNotesTemplate.md](https://github.com/JDM170/ReVanced_Builder/blob/main/ReleaseNotesTemplate.md) template.
 
-The release will contain two files:
-`Youtube-ReVanced.zip` - `youtube-revanced.apk`, `microg.apk` and `microg-hw.apk` (for Huawei devices) - ready for installation/update.
-`Youtube-Morphe.zip` - `youtube-morphe.apk` and `microg.apk` - ready for installation/update.
-`reddit.apk` - ready for installation/update.
+The release will contain three files:
+* `Youtube-ReVanced.zip` - `youtube-revanced.apk`, `microg.apk` and `microg-hw.apk` (for Huawei devices);
+* `Youtube-Morphe.zip` - `youtube-morphe.apk` and `microg.apk`;
+* `reddit.apk`.
 
 ## Links
 * [APKPure](https://apkpure.net)
 * [APKMirror](https://apkmirror.com)
 * [Zulu JDK](https://github.com/ScoopInstaller/Java)
+* [APKEditor](https://github.com/REAndroid/APKEditor)
 * [ReVanced CLI](https://github.com/revanced/revanced-cli)
 * [ReVanced Patches](https://github.com/revanced/revanced-patches)
 * [ReVanced MicroG](https://github.com/ReVanced/GmsCore)
