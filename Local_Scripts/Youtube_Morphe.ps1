@@ -8,7 +8,7 @@
       * Azul Zulu.
 
     .NOTES
-    After compiling, microg.apk and compiled morphe-youtube.apk will be located in "Script location folder\Morphe"
+    After compiling, microg.apk and compiled youtube-morphe.apk will be located in "Script location folder\Morphe"
 
     .LINKS
     https://github.com/MorpheApp
@@ -148,14 +148,14 @@ Write-Host "Creating patched APK" -ForegroundColor Green
 --disable "Theme" `
 --purge `
 --temporary-files-path "$CurrentFolder\Morphe\Temp" `
---out "$CurrentFolder\Morphe\morphe-youtube.apk" `
+--out "$CurrentFolder\Morphe\youtube-morphe.apk" `
 "$CurrentFolder\Morphe\youtube.apk"
 
 # Open working directory with builded files
 # Invoke-Item -Path "$CurrentFolder\Morphe"
 
 $Files = @(
-    # "$CurrentFolder\Morphe\Temp",
+    "$CurrentFolder\Morphe\Temp",
     "$CurrentFolder\Morphe\jdk",
     "$CurrentFolder\Morphe\morphe-cli.jar",
     "$CurrentFolder\Morphe\morphe-patches.mpp",
@@ -163,4 +163,4 @@ $Files = @(
 )
 Remove-Item -Path $Files -Recurse -Force
 
-Write-Warning -Message "Latest available morphe-youtube.apk & microg.apk are ready in `"$CurrentFolder\Morphe`""
+Write-Warning -Message "Latest available youtube-morphe.apk & microg.apk are ready in `"$CurrentFolder\Morphe`""

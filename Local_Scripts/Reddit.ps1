@@ -8,7 +8,7 @@
       * Azul Zulu.
 
     .NOTES
-    After compiling morphe-reddit.apk will be located in "Script location folder\Morphe"
+    After compiling reddit-morphe.apk will be located in "Script location folder\Morphe"
 
     .LINKS
     https://github.com/MorpheApp
@@ -151,14 +151,14 @@ Write-Host "Creating patched APK" -ForegroundColor Green
 --patches "$CurrentFolder\Morphe\morphe-patches.mpp" `
 --purge `
 --temporary-files-path "$CurrentFolder\Morphe\Temp" `
---out "$CurrentFolder\Morphe\morphe-reddit.apk" `
+--out "$CurrentFolder\Morphe\reddit-morphe.apk" `
 "$CurrentFolder\Morphe\merged.apk"
 
 # Open working directory with builded files
 # Invoke-Item -Path "$CurrentFolder\Morphe"
 
 $Files = @(
-    # "$CurrentFolder\Morphe\Temp",
+    "$CurrentFolder\Morphe\Temp",
     "$CurrentFolder\Morphe\jdk",
     "$CurrentFolder\Morphe\morphe-cli.jar",
     "$CurrentFolder\Morphe\morphe-patches.mpp",
@@ -168,4 +168,4 @@ $Files = @(
 )
 Remove-Item -Path $Files -Recurse -Force
 
-Write-Warning -Message "Latest available morphe-reddit.apk are ready in `"$CurrentFolder\Morphe`""
+Write-Warning -Message "Latest available reddit-morphe.apk are ready in `"$CurrentFolder\Morphe`""

@@ -9,7 +9,7 @@
       * Azul Zulu.
 
     .NOTES
-    After compiling, microg.apk and compiled revanced.apk will be located in "Script location folder folder\ReVanced"
+    After compiling, microg.apk and compiled youtube-revanced.apk will be located in "Script location folder folder\ReVanced"
 
     .LINKS
     https://github.com/revanced
@@ -154,7 +154,7 @@ Read-Host
 --disable "Hide seekbar" `
 --purge `
 --temporary-files-path "$CurrentFolder\ReVanced\Temp" `
---out "$CurrentFolder\ReVanced\revanced.apk" `
+--out "$CurrentFolder\ReVanced\youtube-revanced.apk" `
 -b `
 "$CurrentFolder\ReVanced\youtube.apk"
 
@@ -173,4 +173,4 @@ $Files = @(
 )
 Remove-Item -Path $Files -Recurse -Force
 
-Write-Warning -Message "Latest available revanced.apk & microg.apk are ready in `"$CurrentFolder\ReVanced`""
+Write-Warning -Message "Latest available youtube-revanced.apk & microg.apk are ready in `"$CurrentFolder\ReVanced`""
