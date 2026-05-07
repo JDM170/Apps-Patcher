@@ -19,7 +19,7 @@ jobs:
       youtube_microg: ${{ steps.youtube_microg.outputs.MicroGTag }}
       youtube_app: ${{ steps.youtube_app.outputs.SupportedYoutube }}
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v6
 
       - name: Download and expand Zulu JDK
         id: zulu
@@ -56,7 +56,7 @@ jobs:
         if: ${{ env.KEYSTORE != '' }}
         run: |
           [byte[]]$bytes = [convert]::FromBase64String('${{ env.KEYSTORE }}')
-          [System.IO.File]::WriteAllBytes("ReVanced\revanced.keystore", $bytes)
+          [System.IO.File]::WriteAllBytes("ReVanced\youtube-revanced.keystore", $bytes)
 
       - name: Build patched APK
         run: |
@@ -99,7 +99,7 @@ jobs:
       youtube_microg: ${{ steps.youtube_microg.outputs.MicroGTag }}
       youtube_app: ${{ steps.youtube_app.outputs.SupportedYoutube }}
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v6
 
       - name: Download and expand Zulu JDK
         env:
@@ -135,7 +135,7 @@ jobs:
         if: ${{ env.KEYSTORE != '' }}
         run: |
           [byte[]]$bytes = [convert]::FromBase64String('${{ env.KEYSTORE }}')
-          [System.IO.File]::WriteAllBytes("Morphe\morphe.keystore", $bytes)
+          [System.IO.File]::WriteAllBytes("Morphe\youtube-morphe.keystore", $bytes)
 
       - name: Build patched APK
         run: |
@@ -176,7 +176,7 @@ jobs:
       reddit_app: ${{ steps.reddit_app.outputs.SupportedReddit }}
       apkeditor: ${{ steps.apkeditor.outputs.ApkEditorTag }}
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v6
 
       - name: Download and expand Zulu JDK
         env:
@@ -210,7 +210,7 @@ jobs:
         if: ${{ env.KEYSTORE != '' }}
         run: |
           [byte[]]$bytes = [convert]::FromBase64String('${{ env.KEYSTORE }}')
-          [System.IO.File]::WriteAllBytes("Morphe\morphe.keystore", $bytes)
+          [System.IO.File]::WriteAllBytes("Morphe\reddit.keystore", $bytes)
 
       - name: Merge APKM to APK
         run: |
@@ -242,7 +242,7 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v6
 
       - name: Download YouTube ReVanced artifact
         uses: actions/download-artifact@v7
@@ -283,7 +283,7 @@ jobs:
           echo "RELEASE_NAME=$ReleaseName" >> $env:GITHUB_ENV
 
       - name: Upload to Releases
-        uses: softprops/action-gh-release@v2.2.1
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ env.RELEASE_NAME }}
           body_path: ${{ steps.release_notes.outputs.ReleaseBody }}

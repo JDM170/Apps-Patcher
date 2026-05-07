@@ -11,7 +11,7 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v6
 
       - name: Download and expand Zulu JDK
         env:
@@ -43,7 +43,7 @@ jobs:
         if: ${{ env.KEYSTORE != '' }}
         run: |
           [byte[]]$bytes = [convert]::FromBase64String('${{ env.KEYSTORE }}')
-          [System.IO.File]::WriteAllBytes("ReVanced\revanced.keystore", $bytes)
+          [System.IO.File]::WriteAllBytes("ReVanced\youtube-revanced.keystore", $bytes)
 
       - name: Build patched APK
         run: |
