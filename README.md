@@ -1,12 +1,12 @@
-<a href="https://github.com/JDM170/Morphe_Builder/actions"><img src="https://img.shields.io/github/actions/workflow/status/JDM170/Morphe_Builder/Build.yml?label=GitHub%20Actions&logo=GitHub"></a>
+<a href="https://github.com/JDM170/Apps-Patcher/actions"><img src="https://img.shields.io/github/actions/workflow/status/JDM170/Apps-Patcher/Build.yml?label=GitHub%20Actions&logo=GitHub"></a>
 
-# Morphe builder
+# Apps Patcher
 Build packages (.apk) easily than ever using latest ReVanced & Morphe patches and dependencies locally or via cloud
 
 ## Usage
 
 ### Locally
-* To build YouTube or Reddit locally you need just to run [`Youtube_ReVanced.ps1`](https://github.com/JDM170/Morphe_Builder/blob/main/Local_Scripts/Youtube_ReVanced.ps1) OR [`Youtube_Morphe.ps1`](https://github.com/JDM170/Morphe_Builder/blob/main/Local_Scripts/Youtube_Morphe.ps1) OR [`Reddit.ps1`](https://github.com/JDM170/Morphe_Builder/blob/main/Local_Scripts/Reddit.ps1) via PowerShell;
+* To build YouTube or Reddit locally you need just to run [`Youtube_ReVanced.ps1`](https://github.com/JDM170/Apps-Patcher/blob/main/Local_Scripts/Youtube_ReVanced.ps1) OR [`Youtube_Morphe.ps1`](https://github.com/JDM170/Apps-Patcher/blob/main/Local_Scripts/Youtube_Morphe.ps1) OR [`Reddit.ps1`](https://github.com/JDM170/Apps-Patcher/blob/main/Local_Scripts/Reddit.ps1) via PowerShell;
 * All patches except the followings applied to Youtube:
   * Custom branding
   * Change header
@@ -23,13 +23,13 @@ Build packages (.apk) easily than ever using latest ReVanced & Morphe patches an
   * if you want to use PowerShell 7, you will have to install a 3rd party HTML parser ([AngleSharp](https://github.com/AngleSharp/AngleSharp))
 
 ### By using CI/CD
-Trigger the [`Build`](https://github.com/JDM170/Morphe_Builder/actions/workflows/Build.yml) action manually to create [release page](https://github.com/JDM170/Morphe_Builder/releases/latest) with configured release notes showing dependencies used for building.
+Trigger the [`Build`](https://github.com/JDM170/Apps-Patcher/actions/workflows/Build.yml) action manually to create [release page](https://github.com/JDM170/Apps-Patcher/releases/latest) with configured release notes showing dependencies used for building.
 
 ![image](https://user-images.githubusercontent.com/10544660/187949763-82fd7a07-8e4e-4527-b631-11920077141f.png)
 
 Every 1st of the month, releases are created automatically according to the schedule.
 
-Release notes are generated dynamically using the [ReleaseNotesTemplate.md](https://github.com/JDM170/ReVanced_Builder/blob/main/ReleaseNotesTemplate.md) template.
+Release notes are generated dynamically using the [ReleaseNotesTemplate.md](https://github.com/JDM170/Apps-Patcher/blob/main/ReleaseNotesTemplate.md) template.
 
 The release will contain three files:
 * `Youtube-ReVanced.zip` - `youtube-revanced.apk`, `microg.apk` and `microg-hw.apk` (for Huawei devices);
