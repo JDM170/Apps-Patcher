@@ -28,11 +28,14 @@ $Parameters = @{
 }
 Invoke-Webrequest @Parameters
 
+& "$env:SystemRoot\System32\tar.exe" -xvf "Morphe\edgedriver_win64.zip" -C "Morphe" "msedgedriver.exe"
+
 Write-Verbose -Message "Selenium web driver" -Verbose
 
 # Download Selenium web driver
 # https://www.nuget.org/packages/selenium.webdriver
 # https://www.nuget.org/packages/selenium.support
+# https://github.com/SeleniumHQ/selenium
 try
 {
     $Parameters = @{
@@ -52,33 +55,18 @@ catch
     exit 1
 }
 
-$Parameters = @{
-    Path            = "Morphe\edgedriver_win64.zip"
-    DestinationPath = "Morphe"
-    Force           = $true
-    Verbose         = $true
-}
-Expand-Archive @Parameters
-
-# Extract WebDriver.dll from archive
-Add-Type -Assembly System.IO.Compression.FileSystem
-$ZIP = [IO.Compression.ZipFile]::OpenRead("Morphe\selenium.webdriver.nupkg")
-$Entries = $ZIP.Entries | Where-Object -FilterScript {$_.FullName -eq "lib/net8.0/WebDriver.dll"}
-$Entries | ForEach-Object -Process {[IO.Compression.ZipFileExtensions]::ExtractToFile($_, "Morphe\$($_.Name)", $true)}
-$ZIP.Dispose()
+& "$env:SystemRoot\System32\tar.exe" -xvf "Morphe\selenium.webdriver.nupkg" -C "Morphe" --strip-components=2 "lib/net8.0/Selenium.WebDriver.dll"
 
 $Paths = @(
-    "Morphe\Driver_Notes",
     "Morphe\edgedriver_win64.zip",
     "Morphe\selenium.webdriver.nupkg"
 )
 Remove-Item -Path $Paths -Force -Recurse
 
 Write-Verbose -Message "Adding web driver" -Verbose
+Add-Type -Path "Morphe\Selenium.WebDriver.dll"
 
 # Start parsing page
-Add-Type -Path "Morphe\WebDriver.dll"
-
 $Options = New-Object -TypeName OpenQA.Selenium.Edge.EdgeOptions
 $Options.AddArgument("--headless=new")
 $Options.AddArgument("--window-size=1280,720")
