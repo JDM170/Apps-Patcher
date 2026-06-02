@@ -134,8 +134,9 @@ jobs:
           KEYSTORE: ${{ secrets.MORPHE_KEYSTORE }}
         if: ${{ env.KEYSTORE != '' }}
         run: |
+          New-Item -Path "Morphe\morphe-data" -ItemType Directory -Force
           [byte[]]$bytes = [convert]::FromBase64String('${{ env.KEYSTORE }}')
-          [System.IO.File]::WriteAllBytes("Morphe\youtube-morphe.keystore", $bytes)
+          [System.IO.File]::WriteAllBytes("Morphe\morphe-data\morphe.keystore", $bytes)
 
       - name: Build patched APK
         run: |
@@ -209,8 +210,9 @@ jobs:
           KEYSTORE: ${{ secrets.MORPHE_KEYSTORE }}
         if: ${{ env.KEYSTORE != '' }}
         run: |
+          New-Item -Path "Morphe\morphe-data" -ItemType Directory -Force
           [byte[]]$bytes = [convert]::FromBase64String('${{ env.KEYSTORE }}')
-          [System.IO.File]::WriteAllBytes("Morphe\reddit.keystore", $bytes)
+          [System.IO.File]::WriteAllBytes("Morphe\morphe-data\morphe.keystore", $bytes)
 
       - name: Merge APKM to APK
         run: |
