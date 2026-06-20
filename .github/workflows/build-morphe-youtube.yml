@@ -1,6 +1,20 @@
-name: Build_Morphe_Youtube
+name: Build Morphe YouTube
 
 on:
+  workflow_call:
+    outputs:
+      cli:
+        description: "Morphe CLI version"
+        value: ${{ jobs.youtube_morphe.outputs.cli }}
+      patches:
+        description: "Morphe Patches version"
+        value: ${{ jobs.youtube_morphe.outputs.patches }}
+      youtube_microg:
+        description: "MicroG version"
+        value: ${{ jobs.youtube_morphe.outputs.youtube_microg }}
+      youtube_app:
+        description: "Supported YouTube version"
+        value: ${{ jobs.youtube_morphe.outputs.youtube_app }}
   workflow_dispatch:
 
 env:
@@ -10,6 +24,11 @@ jobs:
   youtube_morphe:
     runs-on: windows-latest
     timeout-minutes: 10
+    outputs:
+      cli: ${{ steps.morphe_cli.outputs.CLIvtag }}
+      patches: ${{ steps.morphe_patches.outputs.Patchesvtag }}
+      youtube_microg: ${{ steps.youtube_microg.outputs.MicroGTag }}
+      youtube_app: ${{ steps.youtube_app.outputs.SupportedYoutube }}
     steps:
       - uses: actions/checkout@v6
 
@@ -18,24 +37,23 @@ jobs:
           ZuluJDKDir: "Morphe"
         run: |
           New-Item -Path Morphe -ItemType Directory -Force
-
           . Scripts\Zulu_JDK.ps1
 
       - name: Download Morphe CLI
-        run: |
-          . Scripts\Morphe\CLI.ps1
+        id: morphe_cli
+        run: . Scripts\Morphe\CLI.ps1
 
       - name: Download Morphe Patches
-        run: |
-          . Scripts\Morphe\Patches.ps1
+        id: morphe_patches
+        run: . Scripts\Morphe\Patches.ps1
 
       - name: Download Morphe MicroG
-        run: |
-          . Scripts\Morphe\MicroG.ps1
+        id: youtube_microg
+        run: . Scripts\Morphe\MicroG.ps1
 
       - name: Download YouTube App
-        run: |
-          . Scripts\Morphe\YouTube.ps1
+        id: youtube_app
+        run: . Scripts\Morphe\YouTube.ps1
 
       - name: Add keystore from secrets
         env:
@@ -76,3 +94,4 @@ jobs:
         with:
           name: YouTube-Morphe
           path: Youtube-Morphe.zip
+          retention-days: 1

@@ -1,6 +1,14 @@
-name: Build_Morphe_Reddit
+name: Build Morphe Reddit
 
 on:
+  workflow_call:
+    outputs:
+      reddit_app:
+        description: "Supported Reddit version"
+        value: ${{ jobs.reddit.outputs.reddit_app }}
+      apkeditor:
+        description: "APKEditor version"
+        value: ${{ jobs.reddit.outputs.apkeditor }}
   workflow_dispatch:
 
 env:
@@ -10,6 +18,9 @@ jobs:
   reddit:
     runs-on: windows-latest
     timeout-minutes: 10
+    outputs:
+      reddit_app: ${{ steps.reddit_app.outputs.SupportedReddit }}
+      apkeditor: ${{ steps.apkeditor.outputs.ApkEditorTag }}
     steps:
       - uses: actions/checkout@v6
 
@@ -18,24 +29,21 @@ jobs:
           ZuluJDKDir: "Morphe"
         run: |
           New-Item -Path Morphe -ItemType Directory -Force
-
           . Scripts\Zulu_JDK.ps1
 
       - name: Download Morphe CLI
-        run: |
-          . Scripts\Morphe\CLI.ps1
+        run: . Scripts\Morphe\CLI.ps1
 
       - name: Download Morphe Patches
-        run: |
-          . Scripts\Morphe\Patches.ps1
+        run: . Scripts\Morphe\Patches.ps1
 
       - name: Download APKEditor
-        run: |
-          . Scripts\APKEditor.ps1
+        id: apkeditor
+        run: . Scripts\APKEditor.ps1
 
       - name: Download Reddit App
-        run: |
-          . Scripts\Morphe\Reddit.ps1
+        id: reddit_app
+        run: . Scripts\Morphe\Reddit.ps1
 
       - name: Add keystore from secrets
         env:
@@ -49,23 +57,16 @@ jobs:
       - name: Merge APKM to APK
         run: |
           $JavaPath = (Resolve-Path -Path "Morphe\jdk_windows-x64_bin\zulu*win_x64\bin\java.exe").Path
-          & $JavaPath `
-          -jar "Morphe\apkeditor.jar" m `
-          -i "Morphe\reddit.apkm" `
-          -o "Morphe\merged.apk"
+          & $JavaPath -jar "Morphe\apkeditor.jar" m -i "Morphe\reddit.apkm" -o "Morphe\merged.apk"
 
       - name: Build patched APK
         run: |
           $JavaPath = (Resolve-Path -Path "Morphe\jdk_windows-x64_bin\zulu*win_x64\bin\java.exe").Path
-          & $JavaPath `
-          -jar "Morphe\morphe-cli.jar" patch `
-          --patches "Morphe\morphe-patches.mpp" `
-          --purge `
-          --out "Morphe\reddit.apk" `
-          "Morphe\merged.apk"
+          & $JavaPath -jar "Morphe\morphe-cli.jar" patch --patches "Morphe\morphe-patches.mpp" --purge --out "Morphe\reddit.apk" "Morphe\merged.apk"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v6
         with:
           name: Reddit
           path: Morphe/reddit.apk
+          retention-days: 1
