@@ -37,6 +37,7 @@ The release will contain three files:
 * `reddit.apk`.
 
 ## Links
+* [farag2 main repository](https://github.com/farag2/YouTube-Patcher)
 * [APKPure](https://apkpure.net)
 * [APKMirror](https://apkmirror.com)
 * [Zulu JDK](https://github.com/ScoopInstaller/Java)
