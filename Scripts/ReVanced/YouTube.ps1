@@ -1,4 +1,6 @@
 # Get the latest supported YouTube version to patch
+Write-Verbose -Message "" -Verbose
+Write-Verbose -Message "Get latest supported YouTube version" -Verbose
 $JavaPath = (Resolve-Path -Path "ReVanced\jdk_windows-x64_bin\zulu*win_x64\bin\java.exe").Path
 $patches_list = & $JavaPath `
 -jar "ReVanced\revanced-cli.jar" list-patches `
@@ -12,8 +14,8 @@ $LatestSupportedYT = $LatestSupported.Replace('.', '-')
 
 Get-Process -Name msedgedriver, msedge -ErrorAction Ignore | Stop-Process -Force -ErrorAction Ignore
 
+Write-Verbose -Message "" -Verbose
 Write-Verbose -Message "Microsoft Edge driver" -Verbose
-
 # Get runner Microsoft Edge Version
 # https://edgeupdates.microsoft.com/api/products
 # https://github.com/GoogleChromeLabs/chrome-for-testing/blob/main/data/last-known-good-versions-with-downloads.json
@@ -31,8 +33,8 @@ Invoke-Webrequest @Parameters
 
 & "$env:SystemRoot\System32\tar.exe" -xvf "ReVanced\edgedriver_win64.zip" -C "ReVanced" "msedgedriver.exe"
 
+Write-Verbose -Message "" -Verbose
 Write-Verbose -Message "Selenium web driver" -Verbose
-
 # Download Selenium web driver
 # https://www.nuget.org/packages/selenium.webdriver
 # https://www.nuget.org/packages/selenium.support
@@ -64,6 +66,7 @@ $Paths = @(
 )
 Remove-Item -Path $Paths -Force -Recurse
 
+Write-Verbose -Message "" -Verbose
 Write-Verbose -Message "Adding web driver" -Verbose
 Add-Type -Path "ReVanced\Selenium.WebDriver.dll"
 
@@ -80,13 +83,14 @@ $links = @(
     "https://www.apkmirror.com/apk/google-inc/youtube/youtube-$($LatestSupportedYT)-release/youtube-$($LatestSupportedYT)-android-apk-download/",
     "https://www.apkmirror.com/apk/google-inc/youtube/youtube-$($LatestSupportedYT)-release/youtube-$($LatestSupportedYT)-1-android-apk-download/",
     "https://www.apkmirror.com/apk/google-inc/youtube/youtube-$($LatestSupportedYT)-release/youtube-$($LatestSupportedYT)-2-android-apk-download/",
-    "https://www.apkmirror.com/apk/google-inc/youtube/youtube-$($LatestSupportedYT)-release/youtube-$($LatestSupportedYT)-3-android-apk-download/"
+    "https://www.apkmirror.com/apk/google-inc/youtube/youtube-$($LatestSupportedYT)-release/youtube-$($LatestSupportedYT)-3-android-apk-download/",
     "https://www.apkmirror.com/apk/google-inc/youtube/youtube-$($LatestSupportedYT)-release/youtube-$($LatestSupportedYT)-4-android-apk-download/"
 )
 $DownloadURL = $null
 
 foreach ($link in $links)
 {
+    Write-Verbose -Message "" -Verbose
     Write-Verbose -Message "Trying URL $link" -Verbose
     $driver.Navigate().GoToUrl($link)
 
@@ -96,20 +100,22 @@ foreach ($link in $links)
         Write-Verbose -Message "No download button found on $link, skipping" -Verbose
         continue
     }
+
     $button = $buttons[0]
     $buttonText = $button.Text.Trim()
-
     if (($buttonText -match "(?i)download apk") -and ($buttonText -notmatch "(?i)bundle"))
     {
         Write-Verbose -Message "Found 'DOWNLOAD APK' on $link" -Verbose
         $DownloadURL = $button.GetAttribute("href")
         break
     }
+
     Start-Sleep -Seconds 5
 }
 
 if ([string]::IsNullOrWhiteSpace($DownloadURL))
 {
+    Write-Verbose -Message "" -Verbose
     Write-Verbose -Message "No link with 'DOWNLOAD APK' found. Exiting." -Verbose
     $driver.Quit()
     exit
