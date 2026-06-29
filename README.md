@@ -1,4 +1,4 @@
-<a href="https://github.com/JDM170/Apps-Patcher/actions"><img src="https://img.shields.io/github/actions/workflow/status/JDM170/Apps-Patcher/Build.yml?label=GitHub%20Actions&logo=GitHub"></a>
+<a href="https://github.com/JDM170/Apps-Patcher/actions"><img src="https://img.shields.io/github/actions/workflow/status/JDM170/Apps-Patcher/build-all.yml?label=GitHub%20Actions&logo=GitHub"></a>
 
 # Apps Patcher
 Build packages (.apk) easily than ever using latest ReVanced & Morphe patches and dependencies locally or via cloud
