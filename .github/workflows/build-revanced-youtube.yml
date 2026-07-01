@@ -18,6 +18,9 @@ on:
       youtube_app:
         description: "Supported YouTube version"
         value: ${{ jobs.youtube_revanced.outputs.youtube_app }}
+    secrets:
+      REVANCED_KEYSTORE:
+        required: true
   workflow_dispatch:
 
 env:

@@ -9,6 +9,9 @@ on:
       apkeditor:
         description: "APKEditor version"
         value: ${{ jobs.reddit.outputs.apkeditor }}
+    secrets:
+      MORPHE_KEYSTORE:
+        required: true
   workflow_dispatch:
 
 env:

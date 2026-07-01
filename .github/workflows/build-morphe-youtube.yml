@@ -15,6 +15,9 @@ on:
       youtube_app:
         description: "Supported YouTube version"
         value: ${{ jobs.youtube_morphe.outputs.youtube_app }}
+    secrets:
+      MORPHE_KEYSTORE:
+        required: true
   workflow_dispatch:
 
 env:
