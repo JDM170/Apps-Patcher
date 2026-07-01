@@ -5,6 +5,7 @@ $JavaPath = (Resolve-Path -Path "Morphe\jdk_windows-x64_bin\zulu*win_x64\bin\jav
 $patches_list = & $JavaPath `
 -jar "Morphe\morphe-cli.jar" list-patches `
 --patches "Morphe\morphe-patches.mpp" `
+--with-descriptions `
 --with-packages `
 --with-versions `
 --filter-package-name "com.google.android.youtube"

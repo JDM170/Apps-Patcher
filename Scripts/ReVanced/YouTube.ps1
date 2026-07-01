@@ -5,6 +5,7 @@ $JavaPath = (Resolve-Path -Path "ReVanced\jdk_windows-x64_bin\zulu*win_x64\bin\j
 $patches_list = & $JavaPath `
 -jar "ReVanced\revanced-cli.jar" list-patches `
 --patches "ReVanced\revanced-patches.rvp" `
+--descriptions `
 --packages `
 --versions `
 --filter-package-name "com.google.android.youtube" `
