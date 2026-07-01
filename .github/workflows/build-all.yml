@@ -8,12 +8,18 @@ on:
 jobs:
   call_revanced:
     uses: ./.github/workflows/build-revanced-youtube.yml
+    secrets:
+      REVANCED_KEYSTORE: ${{ secrets.REVANCED_KEYSTORE }}
 
   call_morphe:
     uses: ./.github/workflows/build-morphe-youtube.yml
+    secrets:
+      MORPHE_KEYSTORE: ${{ secrets.MORPHE_KEYSTORE }}
 
   call_reddit:
     uses: ./.github/workflows/build-morphe-reddit.yml
+    secrets:
+      MORPHE_KEYSTORE: ${{ secrets.MORPHE_KEYSTORE }}
 
   release:
     needs: [call_revanced, call_morphe, call_reddit]
