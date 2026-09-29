@@ -8,8 +8,8 @@ $Parameters = @{
     }
 }
 $apiResult = Invoke-RestMethod @Parameters
-$URL = ($apiResult.assets | Where-Object -FilterScript {$_.content_type -eq "application/vnd.android.package-archive"}).browser_download_url
 $TAG = $apiResult.tag_name
+$URL = ($apiResult.assets | Where-Object -FilterScript {$_.name -eq "microg-$TAG.apk"}).browser_download_url
 $Parameters = @{
     Uri             = $URL
     Outfile         = "Morphe\microg.apk"

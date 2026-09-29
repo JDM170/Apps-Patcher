@@ -75,7 +75,8 @@ $Parameters = @{
     UseBasicParsing = $true
     Verbose         = $true
 }
-$URL = ((Invoke-RestMethod @Parameters).assets | Where-Object -FilterScript {$_.content_type -eq "application/vnd.android.package-archive"}).browser_download_url
+$apiResult = Invoke-RestMethod @Parameters
+$URL = ($apiResult.assets | Where-Object -FilterScript {$_.name -eq "microg-$($apiResult.tag_name).apk"}).browser_download_url
 $Parameters = @{
     Uri             = $URL
     Outfile         = "$CurrentFolder\Morphe\microg.apk"
