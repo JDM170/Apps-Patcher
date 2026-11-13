@@ -2,7 +2,7 @@
     .SYNOPSIS
     Build Morphe app using latest components:
       * YouTube (latest supported);
-      * Morphe CLI;
+      * Morphe Desktop (CLI);
       * Morphe Patches;
       * Morphe microG GmsCore;
       * Azul Zulu.
@@ -37,7 +37,7 @@ Write-Host "" -ForegroundColor Green
 Write-Host "Downloading Morphe CLI" -ForegroundColor Green
 # https://github.com/MorpheApp/morphe-cli
 $Parameters = @{
-    Uri             = "https://api.github.com/repos/MorpheApp/morphe-cli/releases/latest"
+    Uri             = "https://api.github.com/repos/MorpheApp/morphe-desktop/releases/latest"
     UseBasicParsing = $true
     Verbose         = $true
 }
@@ -125,6 +125,7 @@ Write-Host "Getting latest supported YouTube APK version" -ForegroundColor Green
 $patches_list = & "$CurrentFolder\Morphe\jdk\zulu*win_x64\bin\java.exe" `
 -jar "$CurrentFolder\Morphe\morphe-cli.jar" list-patches `
 --patches "$CurrentFolder\Morphe\morphe-patches.mpp" `
+--with-descriptions `
 --with-packages `
 --with-versions `
 -f "com.google.android.youtube"
@@ -147,7 +148,6 @@ Write-Host "Creating patched APK" -ForegroundColor Green
 --disable "Change header" `
 --disable "Shorts autoplay" `
 --disable "Theme" `
---purge `
 --temporary-files-path "$CurrentFolder\Morphe\Temp" `
 --out "$CurrentFolder\Morphe\youtube-morphe.apk" `
 "$CurrentFolder\Morphe\youtube.apk"

@@ -2,7 +2,7 @@
     .SYNOPSIS
     Build Morphe app using latest components:
       * Reddit (latest supported);
-      * Morphe CLI;
+      * Morphe Desktop (CLI);
       * Morphe Patches;
       * APKEditor;
       * Azul Zulu.
@@ -37,7 +37,7 @@ Write-Host "" -ForegroundColor Green
 Write-Host "Downloading Morphe CLI" -ForegroundColor Green
 # https://github.com/MorpheApp/morphe-cli
 $Parameters = @{
-    Uri             = "https://api.github.com/repos/MorpheApp/morphe-cli/releases/latest"
+    Uri             = "https://api.github.com/repos/MorpheApp/morphe-desktop/releases/latest"
     UseBasicParsing = $true
     Verbose         = $true
 }
@@ -124,6 +124,7 @@ Write-Host "Getting latest supported Reddit APK version" -ForegroundColor Green
 $patches_list = & "$CurrentFolder\Morphe\jdk\zulu*win_x64\bin\java.exe" `
 -jar "$CurrentFolder\Morphe\morphe-cli.jar" list-patches `
 --patches "$CurrentFolder\Morphe\morphe-patches.mpp" `
+--with-descriptions `
 --with-packages `
 --with-versions `
 -f "com.reddit.frontpage"
@@ -149,7 +150,6 @@ Write-Host "Creating patched APK" -ForegroundColor Green
 & "$CurrentFolder\Morphe\jdk\zulu*win_x64\bin\java.exe" `
 -jar "$CurrentFolder\Morphe\morphe-cli.jar" patch `
 --patches "$CurrentFolder\Morphe\morphe-patches.mpp" `
---purge `
 --temporary-files-path "$CurrentFolder\Morphe\Temp" `
 --out "$CurrentFolder\Morphe\reddit-morphe.apk" `
 "$CurrentFolder\Morphe\merged.apk"
