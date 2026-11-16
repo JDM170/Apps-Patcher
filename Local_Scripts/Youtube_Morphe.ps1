@@ -8,7 +8,7 @@
       * Azul Zulu.
 
     .NOTES
-    After compiling, microg.apk and compiled youtube-morphe.apk will be located in "Script location folder\Morphe"
+    After compiling, microg.apk and compiled youtube-morphe.apk will be located in "Script location folder\Youtube-Morphe"
 
     .LINKS
     https://github.com/MorpheApp
@@ -26,11 +26,11 @@ if ($Host.Version.Major -eq 5)
     $Script:ProgressPreference = "SilentlyContinue"
 }
 
-# Download all files to "Script location folder\Morphe"
+# Download all files to "Script location folder\Youtube-Morphe"
 $CurrentFolder = Split-Path $MyInvocation.MyCommand.Path -Parent
-if (-not (Test-Path -Path "$CurrentFolder\Morphe"))
+if (-not (Test-Path -Path "$CurrentFolder\Youtube-Morphe"))
 {
-    New-Item -Path "$CurrentFolder\Morphe" -ItemType Directory -Force
+    New-Item -Path "$CurrentFolder\Youtube-Morphe" -ItemType Directory -Force
 }
 
 Write-Host "" -ForegroundColor Green
@@ -44,7 +44,7 @@ $Parameters = @{
 $URL = ((Invoke-RestMethod @Parameters).assets | Where-Object -FilterScript {$_.content_type -eq "application/java-archive"}).browser_download_url | Select-Object -First 1
 $Parameters = @{
     Uri             = $URL
-    Outfile         = "$CurrentFolder\Morphe\morphe-cli.jar"
+    Outfile         = "$CurrentFolder\Youtube-Morphe\morphe-cli.jar"
     UseBasicParsing = $true
     Verbose         = $true
 }
@@ -61,7 +61,7 @@ $Parameters = @{
 $URL = ((Invoke-RestMethod @Parameters).assets | Where-Object -FilterScript {$_.content_type -eq "application/dash-patch+xml"}).browser_download_url
 $Parameters = @{
     Uri             = $URL
-    Outfile         = "$CurrentFolder\Morphe\morphe-patches.mpp"
+    Outfile         = "$CurrentFolder\Youtube-Morphe\morphe-patches.mpp"
     UseBasicParsing = $true
     Verbose         = $true
 }
@@ -79,16 +79,16 @@ $apiResult = Invoke-RestMethod @Parameters
 $URL = ($apiResult.assets | Where-Object -FilterScript {$_.name -eq "microg-$($apiResult.tag_name).apk"}).browser_download_url
 $Parameters = @{
     Uri             = $URL
-    Outfile         = "$CurrentFolder\Morphe\microg.apk"
+    Outfile         = "$CurrentFolder\Youtube-Morphe\microg.apk"
     UseBasicParsing = $true
     Verbose         = $true
 }
 Invoke-RestMethod @Parameters
 
 # Sometimes older version of zulu-jdk causes conflict, so remove older version before proceeding.
-if (Test-Path -Path "$CurrentFolder\Morphe\jdk")
+if (Test-Path -Path "$CurrentFolder\Youtube-Morphe\jdk")
 {
-    Remove-Item -Path "$CurrentFolder\Morphe\jdk" -Recurse -Force
+    Remove-Item -Path "$CurrentFolder\Youtube-Morphe\jdk" -Recurse -Force
 }
 
 Write-Host "" -ForegroundColor Green
@@ -102,7 +102,7 @@ $Parameters = @{
 $URL = (Invoke-RestMethod @Parameters).architecture."64bit".url
 $Parameters = @{
     Uri             = $URL
-    Outfile         = "$CurrentFolder\Morphe\jdk_windows-x64_bin.zip"
+    Outfile         = "$CurrentFolder\Youtube-Morphe\jdk_windows-x64_bin.zip"
     UseBasicParsing = $true
     Verbose         = $true
 }
@@ -110,21 +110,21 @@ Invoke-RestMethod @Parameters
 
 # Expand jdk_windows-x64_bin archive
 $Parameters = @{
-    Path            = "$CurrentFolder\Morphe\jdk_windows-x64_bin.zip"
-    DestinationPath = "$CurrentFolder\Morphe\jdk"
+    Path            = "$CurrentFolder\Youtube-Morphe\jdk_windows-x64_bin.zip"
+    DestinationPath = "$CurrentFolder\Youtube-Morphe\jdk"
     Force           = $true
     Verbose         = $true
 }
 Expand-Archive @Parameters
 
-Remove-Item -Path "$CurrentFolder\Morphe\jdk_windows-x64_bin.zip" -Force
+Remove-Item -Path "$CurrentFolder\Youtube-Morphe\jdk_windows-x64_bin.zip" -Force
 
 # Find latest supported YouTube APK version
 Write-Host "" -ForegroundColor Green
 Write-Host "Getting latest supported YouTube APK version" -ForegroundColor Green
-$patches_list = & "$CurrentFolder\Morphe\jdk\zulu*win_x64\bin\java.exe" `
--jar "$CurrentFolder\Morphe\morphe-cli.jar" list-patches `
---patches "$CurrentFolder\Morphe\morphe-patches.mpp" `
+$patches_list = & "$CurrentFolder\Youtube-Morphe\jdk\zulu*win_x64\bin\java.exe" `
+-jar "$CurrentFolder\Youtube-Morphe\morphe-cli.jar" list-patches `
+--patches "$CurrentFolder\Youtube-Morphe\morphe-patches.mpp" `
 --with-descriptions `
 --with-packages `
 --with-versions `
@@ -140,28 +140,28 @@ Read-Host
 # Let's create patched APK
 Write-Host "" -ForegroundColor Green
 Write-Host "Creating patched APK" -ForegroundColor Green
-& "$CurrentFolder\Morphe\jdk\zulu*win_x64\bin\java.exe" `
--jar "$CurrentFolder\Morphe\morphe-cli.jar" patch `
---patches "$CurrentFolder\Morphe\morphe-patches.mpp" `
+& "$CurrentFolder\Youtube-Morphe\jdk\zulu*win_x64\bin\java.exe" `
+-jar "$CurrentFolder\Youtube-Morphe\morphe-cli.jar" patch `
+--patches "$CurrentFolder\Youtube-Morphe\morphe-patches.mpp" `
 --disable "Alternative thumbnails" `
 --disable "Custom branding" `
 --disable "Change header" `
 --disable "Shorts autoplay" `
 --disable "Theme" `
---temporary-files-path "$CurrentFolder\Morphe\Temp" `
---out "$CurrentFolder\Morphe\youtube-morphe.apk" `
-"$CurrentFolder\Morphe\youtube.apk"
+--temporary-files-path "$CurrentFolder\Youtube-Morphe\Temp" `
+--out "$CurrentFolder\Youtube-Morphe\youtube-morphe.apk" `
+"$CurrentFolder\Youtube-Morphe\youtube.apk"
 
 # Open working directory with builded files
-# Invoke-Item -Path "$CurrentFolder\Morphe"
+# Invoke-Item -Path "$CurrentFolder\Youtube-Morphe"
 
 $Files = @(
-    "$CurrentFolder\Morphe\Temp",
-    "$CurrentFolder\Morphe\jdk",
-    "$CurrentFolder\Morphe\morphe-cli.jar",
-    "$CurrentFolder\Morphe\morphe-patches.mpp",
-    "$CurrentFolder\Morphe\youtube.apk"
+    "$CurrentFolder\Youtube-Morphe\Temp",
+    "$CurrentFolder\Youtube-Morphe\jdk",
+    "$CurrentFolder\Youtube-Morphe\morphe-cli.jar",
+    "$CurrentFolder\Youtube-Morphe\morphe-patches.mpp",
+    "$CurrentFolder\Youtube-Morphe\youtube.apk"
 )
 Remove-Item -Path $Files -Recurse -Force
 
-Write-Warning -Message "Latest available youtube-morphe.apk & microg.apk are ready in `"$CurrentFolder\Morphe`""
+Write-Warning -Message "Latest available youtube-morphe.apk & microg.apk are ready in `"$CurrentFolder\Youtube-Morphe`""

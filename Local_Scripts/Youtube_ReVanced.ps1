@@ -9,7 +9,7 @@
       * Azul Zulu.
 
     .NOTES
-    After compiling, microg.apk and compiled youtube-revanced.apk will be located in "Script location folder folder\ReVanced"
+    After compiling, microg.apk and compiled youtube-revanced.apk will be located in "Script location folder folder\Youtube-ReVanced"
 
     .LINKS
     https://github.com/revanced
@@ -27,11 +27,11 @@ if ($Host.Version.Major -eq 5)
     $Script:ProgressPreference = "SilentlyContinue"
 }
 
-# Download all files to "Script location folder\ReVanced"
+# Download all files to "Script location folder\Youtube-ReVanced"
 $CurrentFolder = Split-Path $MyInvocation.MyCommand.Path -Parent
-if (-not (Test-Path -Path "$CurrentFolder\ReVanced"))
+if (-not (Test-Path -Path "$CurrentFolder\Youtube-ReVanced"))
 {
-    New-Item -Path "$CurrentFolder\ReVanced" -ItemType Directory -Force
+    New-Item -Path "$CurrentFolder\Youtube-ReVanced" -ItemType Directory -Force
 }
 
 Write-Host "" -ForegroundColor Green
@@ -45,7 +45,7 @@ $Parameters = @{
 $URL = ((Invoke-RestMethod @Parameters).assets | Where-Object -FilterScript {$_.content_type -eq "application/java-archive"}).browser_download_url
 $Parameters = @{
     Uri             = $URL
-    Outfile         = "$CurrentFolder\ReVanced\revanced-cli.jar"
+    Outfile         = "$CurrentFolder\Youtube-ReVanced\revanced-cli.jar"
     UseBasicParsing = $true
     Verbose         = $true
 }
@@ -62,7 +62,7 @@ $Parameters = @{
 $URL = (Invoke-RestMethod @Parameters).download_url
 $Parameters = @{
     Uri             = $URL
-    Outfile         = "$CurrentFolder\ReVanced\revanced-patches.rvp"
+    Outfile         = "$CurrentFolder\Youtube-ReVanced\revanced-patches.rvp"
     UseBasicParsing = $true
     Verbose         = $true
 }
@@ -85,7 +85,7 @@ foreach($url in $URL) {
     }
     $Parameters = @{
         Uri             = $url.browser_download_url
-        Outfile         = "$CurrentFolder\ReVanced\$($url.name)"
+        Outfile         = "$CurrentFolder\Youtube-ReVanced\$($url.name)"
         UseBasicParsing = $true
         Verbose         = $true
     }
@@ -93,9 +93,9 @@ foreach($url in $URL) {
 }
 
 # Sometimes older version of zulu-jdk causes conflict, so remove older version before proceeding.
-if (Test-Path -Path "$CurrentFolder\ReVanced\jdk")
+if (Test-Path -Path "$CurrentFolder\Youtube-ReVanced\jdk")
 {
-    Remove-Item -Path "$CurrentFolder\ReVanced\jdk" -Recurse -Force
+    Remove-Item -Path "$CurrentFolder\Youtube-ReVanced\jdk" -Recurse -Force
 }
 
 Write-Host "" -ForegroundColor Green
@@ -109,7 +109,7 @@ $Parameters = @{
 $URL = (Invoke-RestMethod @Parameters).architecture."64bit".url
 $Parameters = @{
     Uri             = $URL
-    Outfile         = "$CurrentFolder\ReVanced\jdk_windows-x64_bin.zip"
+    Outfile         = "$CurrentFolder\Youtube-ReVanced\jdk_windows-x64_bin.zip"
     UseBasicParsing = $true
     Verbose         = $true
 }
@@ -117,24 +117,24 @@ Invoke-RestMethod @Parameters
 
 # Expand jdk_windows-x64_bin archive
 $Parameters = @{
-    Path            = "$CurrentFolder\ReVanced\jdk_windows-x64_bin.zip"
-    DestinationPath = "$CurrentFolder\ReVanced\jdk"
+    Path            = "$CurrentFolder\Youtube-ReVanced\jdk_windows-x64_bin.zip"
+    DestinationPath = "$CurrentFolder\Youtube-ReVanced\jdk"
     Force           = $true
     Verbose         = $true
 }
 Expand-Archive @Parameters
 
-Remove-Item -Path "$CurrentFolder\ReVanced\jdk_windows-x64_bin.zip" -Force
+Remove-Item -Path "$CurrentFolder\Youtube-ReVanced\jdk_windows-x64_bin.zip" -Force
 
 # Get the latest supported YouTube version to patch
 Write-Host "" -ForegroundColor Green
 Write-Host "Getting latest supported YouTube APK version" -ForegroundColor Green
-$patches_list = & "$CurrentFolder\ReVanced\jdk\zulu*win_x64\bin\java.exe" `
+$patches_list = & "$CurrentFolder\Youtube-ReVanced\jdk\zulu*win_x64\bin\java.exe" `
 -jar "ReVanced\revanced-cli.jar" list-patches `
 --packages `
 --versions `
 --filter-package-name "com.google.android.youtube" `
--p "ReVanced\revanced-patches.rvp" `
+-p "ReVanced\Youtube-ReVanced-patches.rvp" `
 -b
 $LatestSupported = ([regex]::Matches($patches_list, "\d{2}\.\d{2}\.\d{2,3}") | ForEach-Object { $_.Value } | Sort-Object -Descending -Unique | Select-Object -First 1).Replace('.', '-')
 
@@ -145,32 +145,32 @@ Write-Host "Press Enter to continue." -ForegroundColor Green
 Read-Host
 
 # Let's create patched APK
-& "$CurrentFolder\ReVanced\jdk\zulu*win_x64\bin\java.exe" `
--jar "$CurrentFolder\ReVanced\revanced-cli.jar" patch `
---patches "$CurrentFolder\ReVanced\revanced-patches.rvp" `
+& "$CurrentFolder\Youtube-ReVanced\jdk\zulu*win_x64\bin\java.exe" `
+-jar "$CurrentFolder\Youtube-ReVanced\revanced-cli.jar" patch `
+--patches "$CurrentFolder\Youtube-ReVanced\revanced-patches.rvp" `
 --disable "Always repeat" `
 --disable "Disable auto captions" `
 --disable "Hide timestamp" `
 --disable "Hide seekbar" `
 --purge `
---temporary-files-path "$CurrentFolder\ReVanced\Temp" `
---out "$CurrentFolder\ReVanced\youtube-revanced.apk" `
+--temporary-files-path "$CurrentFolder\Youtube-ReVanced\Temp" `
+--out "$CurrentFolder\Youtube-ReVanced\youtube-revanced.apk" `
 -b `
-"$CurrentFolder\ReVanced\youtube.apk"
+"$CurrentFolder\Youtube-ReVanced\youtube.apk"
 
 # Open working directory with builded files
-# Invoke-Item -Path "$CurrentFolder\ReVanced"
+# Invoke-Item -Path "$CurrentFolder\Youtube-ReVanced"
 
 # Remove temp directory, because cli failed to clean up directory
-# Remove-Item -Path "$CurrentFolder\ReVanced\Temp" -Recurse -Force -Confirm:$false
+# Remove-Item -Path "$CurrentFolder\Youtube-ReVanced\Temp" -Recurse -Force -Confirm:$false
 
 $Files = @(
-    # "$CurrentFolder\ReVanced\Temp",
-    "$CurrentFolder\ReVanced\jdk",
-    "$CurrentFolder\ReVanced\revanced-cli.jar",
-    "$CurrentFolder\ReVanced\revanced-patches.rvp",
-    "$CurrentFolder\ReVanced\youtube.apk"
+    # "$CurrentFolder\Youtube-ReVanced\Temp",
+    "$CurrentFolder\Youtube-ReVanced\jdk",
+    "$CurrentFolder\Youtube-ReVanced\revanced-cli.jar",
+    "$CurrentFolder\Youtube-ReVanced\revanced-patches.rvp",
+    "$CurrentFolder\Youtube-ReVanced\youtube.apk"
 )
 Remove-Item -Path $Files -Recurse -Force
 
-Write-Warning -Message "Latest available youtube-revanced.apk & microg.apk are ready in `"$CurrentFolder\ReVanced`""
+Write-Warning -Message "Latest available youtube-revanced.apk & microg.apk are ready in `"$CurrentFolder\Youtube-ReVanced`""

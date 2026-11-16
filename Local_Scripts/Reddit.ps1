@@ -4,11 +4,10 @@
       * Reddit (latest supported);
       * Morphe Desktop (CLI);
       * Morphe Patches;
-      * APKEditor;
       * Azul Zulu.
 
     .NOTES
-    After compiling reddit-morphe.apk will be located in "Script location folder\Morphe"
+    After compiling reddit-morphe.apk will be located in "Script location folder\Reddit-Morphe"
 
     .LINKS
     https://github.com/MorpheApp
@@ -26,11 +25,11 @@ if ($Host.Version.Major -eq 5)
     $Script:ProgressPreference = "SilentlyContinue"
 }
 
-# Download all files to "Script location folder\Morphe"
+# Download all files to "Script location folder\Reddit-Morphe"
 $CurrentFolder = Split-Path $MyInvocation.MyCommand.Path -Parent
-if (-not (Test-Path -Path "$CurrentFolder\Morphe"))
+if (-not (Test-Path -Path "$CurrentFolder\Reddit-Morphe"))
 {
-    New-Item -Path "$CurrentFolder\Morphe" -ItemType Directory -Force
+    New-Item -Path "$CurrentFolder\Reddit-Morphe" -ItemType Directory -Force
 }
 
 Write-Host "" -ForegroundColor Green
@@ -44,7 +43,7 @@ $Parameters = @{
 $URL = ((Invoke-RestMethod @Parameters).assets | Where-Object -FilterScript {$_.content_type -eq "application/java-archive"}).browser_download_url | Select-Object -First 1
 $Parameters = @{
     Uri             = $URL
-    Outfile         = "$CurrentFolder\Morphe\morphe-cli.jar"
+    Outfile         = "$CurrentFolder\Reddit-Morphe\morphe-cli.jar"
     UseBasicParsing = $true
     Verbose         = $true
 }
@@ -61,33 +60,16 @@ $Parameters = @{
 $URL = ((Invoke-RestMethod @Parameters).assets | Where-Object -FilterScript {$_.content_type -eq "application/dash-patch+xml"}).browser_download_url
 $Parameters = @{
     Uri             = $URL
-    Outfile         = "$CurrentFolder\Morphe\morphe-patches.mpp"
-    UseBasicParsing = $true
-    Verbose         = $true
-}
-Invoke-RestMethod @Parameters
-
-Write-Host "" -ForegroundColor Green
-Write-Host "Downloading APKEditor" -ForegroundColor Green
-# https://github.com/REAndroid/APKEditor
-$Parameters = @{
-    Uri             = "https://api.github.com/repos/REAndroid/APKEditor/releases/latest"
-    UseBasicParsing = $true
-    Verbose         = $true
-}
-$URL = ((Invoke-RestMethod @Parameters).assets | Where-Object -FilterScript {$_.content_type -eq "application/x-java-archive"}).browser_download_url | Select-Object -First 1
-$Parameters = @{
-    Uri             = $URL
-    Outfile         = "$CurrentFolder\Morphe\apkeditor.jar"
+    Outfile         = "$CurrentFolder\Reddit-Morphe\morphe-patches.mpp"
     UseBasicParsing = $true
     Verbose         = $true
 }
 Invoke-RestMethod @Parameters
 
 # Sometimes older version of zulu-jdk causes conflict, so remove older version before proceeding.
-if (Test-Path -Path "$CurrentFolder\Morphe\jdk")
+if (Test-Path -Path "$CurrentFolder\Reddit-Morphe\jdk")
 {
-    Remove-Item -Path "$CurrentFolder\Morphe\jdk" -Recurse -Force
+    Remove-Item -Path "$CurrentFolder\Reddit-Morphe\jdk" -Recurse -Force
 }
 
 Write-Host "" -ForegroundColor Green
@@ -101,7 +83,7 @@ $Parameters = @{
 $URL = (Invoke-RestMethod @Parameters).architecture."64bit".url
 $Parameters = @{
     Uri             = $URL
-    Outfile         = "$CurrentFolder\Morphe\jdk_windows-x64_bin.zip"
+    Outfile         = "$CurrentFolder\Reddit-Morphe\jdk_windows-x64_bin.zip"
     UseBasicParsing = $true
     Verbose         = $true
 }
@@ -109,21 +91,21 @@ Invoke-RestMethod @Parameters
 
 # Expand jdk_windows-x64_bin archive
 $Parameters = @{
-    Path            = "$CurrentFolder\Morphe\jdk_windows-x64_bin.zip"
-    DestinationPath = "$CurrentFolder\Morphe\jdk"
+    Path            = "$CurrentFolder\Reddit-Morphe\jdk_windows-x64_bin.zip"
+    DestinationPath = "$CurrentFolder\Reddit-Morphe\jdk"
     Force           = $true
     Verbose         = $true
 }
 Expand-Archive @Parameters
 
-Remove-Item -Path "$CurrentFolder\Morphe\jdk_windows-x64_bin.zip" -Force
+Remove-Item -Path "$CurrentFolder\Reddit-Morphe\jdk_windows-x64_bin.zip" -Force
 
 # Find latest supported Reddit APK version
 Write-Host "" -ForegroundColor Green
 Write-Host "Getting latest supported Reddit APK version" -ForegroundColor Green
-$patches_list = & "$CurrentFolder\Morphe\jdk\zulu*win_x64\bin\java.exe" `
--jar "$CurrentFolder\Morphe\morphe-cli.jar" list-patches `
---patches "$CurrentFolder\Morphe\morphe-patches.mpp" `
+$patches_list = & "$CurrentFolder\Reddit-Morphe\jdk\zulu*win_x64\bin\java.exe" `
+-jar "$CurrentFolder\Reddit-Morphe\morphe-cli.jar" list-patches `
+--patches "$CurrentFolder\Reddit-Morphe\morphe-patches.mpp" `
 --with-descriptions `
 --with-packages `
 --with-versions `
@@ -136,36 +118,26 @@ Write-Host "Place the file in the 'Morphe' folder with the name 'reddit.apkm'." 
 Write-Host "Press Enter to continue." -ForegroundColor Green
 Read-Host
 
-# Merge APKMirror APKM to APK
-Write-Host "" -ForegroundColor Green
-Write-Host "Merging APKM to APK" -ForegroundColor Green
-& "$CurrentFolder\Morphe\jdk\zulu*win_x64\bin\java.exe" `
--jar "$CurrentFolder\Morphe\apkeditor.jar" m `
--i "$CurrentFolder\Morphe\reddit.apkm" `
--o "$CurrentFolder\Morphe\merged.apk"
-
 # Let's create patched APK
 Write-Host "" -ForegroundColor Green
 Write-Host "Creating patched APK" -ForegroundColor Green
-& "$CurrentFolder\Morphe\jdk\zulu*win_x64\bin\java.exe" `
--jar "$CurrentFolder\Morphe\morphe-cli.jar" patch `
---patches "$CurrentFolder\Morphe\morphe-patches.mpp" `
---temporary-files-path "$CurrentFolder\Morphe\Temp" `
---out "$CurrentFolder\Morphe\reddit-morphe.apk" `
-"$CurrentFolder\Morphe\merged.apk"
+& "$CurrentFolder\Reddit-Morphe\jdk\zulu*win_x64\bin\java.exe" `
+-jar "$CurrentFolder\Reddit-Morphe\morphe-cli.jar" patch `
+--patches "$CurrentFolder\Reddit-Morphe\morphe-patches.mpp" `
+--temporary-files-path "$CurrentFolder\Reddit-Morphe\Temp" `
+--out "$CurrentFolder\Reddit-Morphe\reddit-morphe.apk" `
+"$CurrentFolder\Reddit-Morphe\reddit.apkm"
 
 # Open working directory with builded files
-# Invoke-Item -Path "$CurrentFolder\Morphe"
+# Invoke-Item -Path "$CurrentFolder\Reddit-Morphe"
 
 $Files = @(
-    "$CurrentFolder\Morphe\Temp",
-    "$CurrentFolder\Morphe\jdk",
-    "$CurrentFolder\Morphe\morphe-cli.jar",
-    "$CurrentFolder\Morphe\morphe-patches.mpp",
-    "$CurrentFolder\Morphe\apkeditor.jar",
-    "$CurrentFolder\Morphe\reddit.apkm",
-    "$CurrentFolder\Morphe\merged.apk"
+    "$CurrentFolder\Reddit-Morphe\Temp",
+    "$CurrentFolder\Reddit-Morphe\jdk",
+    "$CurrentFolder\Reddit-Morphe\morphe-cli.jar",
+    "$CurrentFolder\Reddit-Morphe\morphe-patches.mpp",
+    "$CurrentFolder\Reddit-Morphe\reddit.apkm"
 )
 Remove-Item -Path $Files -Recurse -Force
 
-Write-Warning -Message "Latest available reddit-morphe.apk are ready in `"$CurrentFolder\Morphe`""
+Write-Warning -Message "Latest available reddit-morphe.apk are ready in `"$CurrentFolder\Reddit-Morphe`""
