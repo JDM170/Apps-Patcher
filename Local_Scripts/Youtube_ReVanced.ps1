@@ -130,11 +130,11 @@ Remove-Item -Path "$CurrentFolder\Youtube-ReVanced\jdk_windows-x64_bin.zip" -For
 Write-Host "" -ForegroundColor Green
 Write-Host "Getting latest supported YouTube APK version" -ForegroundColor Green
 $patches_list = & "$CurrentFolder\Youtube-ReVanced\jdk\zulu*win_x64\bin\java.exe" `
--jar "ReVanced\revanced-cli.jar" list-patches `
+-jar "$CurrentFolder\Youtube-ReVanced\revanced-cli.jar" list-patches `
 --packages `
 --versions `
 --filter-package-name "com.google.android.youtube" `
--p "ReVanced\Youtube-ReVanced-patches.rvp" `
+-p "$CurrentFolder\Youtube-ReVanced\revanced-patches.rvp" `
 -b
 $LatestSupported = ([regex]::Matches($patches_list, "\d{2}\.\d{2}\.\d{2,3}") | ForEach-Object { $_.Value } | Sort-Object -Descending -Unique | Select-Object -First 1).Replace('.', '-')
 
